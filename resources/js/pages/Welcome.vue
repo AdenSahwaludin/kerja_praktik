@@ -83,6 +83,22 @@ import { Head, Link } from '@inertiajs/vue3';
                     </ul>
                     <ul class="flex gap-3 text-sm leading-normal">
                         <li>
+                            <Link
+                                :href="route('login')"
+                                class="inline-block rounded-sm border border-[#f53003] bg-[#f53003] px-5 py-1.5 text-sm leading-normal text-white hover:border-[#d4230b] hover:bg-[#d4230b] dark:border-[#FF4433] dark:bg-[#FF4433] dark:hover:border-[#ff2211] dark:hover:bg-[#ff2211]"
+                            >
+                                Login
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :href="route('register')"
+                                class="inline-block rounded-sm border border-[#1b1b18] bg-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-black hover:bg-[#1b1b18] hover:text-white dark:border-[#eeeeec] dark:text-[#eeeeec] dark:hover:border-white dark:hover:bg-[#eeeeec] dark:hover:text-[#1C1C1A]"
+                            >
+                                Register
+                            </Link>
+                        </li>
+                        <li>
                             <a
                                 href="https://cloud.laravel.com"
                                 target="_blank"
