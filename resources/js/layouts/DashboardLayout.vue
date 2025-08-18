@@ -7,11 +7,12 @@ const user = computed(() => props.auth?.user);
 
 // Sidebar state
 const isSidebarExpanded = ref(true);
+const isLoading = ref(true);
 
 onMounted(() => {
     // Load Sneat CSS and JS
-    const loadSneatAssets = () => {
-        // Load CSS files
+    const loadSneatAssets = async () => {
+        // Load CSS files first
         const cssFiles = [
             '/sneat/assets/vendor/fonts/boxicons.css',
             '/sneat/assets/vendor/css/core.css',
@@ -29,7 +30,7 @@ onMounted(() => {
             }
         });
 
-        // Load JS files
+        // Load JS files sequentially
         const jsFiles = [
             '/sneat/assets/vendor/libs/jquery/jquery.js',
             '/sneat/assets/vendor/libs/popper/popper.js',
@@ -54,10 +55,112 @@ onMounted(() => {
             });
         };
 
-        // Load scripts sequentially
-        jsFiles.reduce((promise: Promise<void>, src: string): Promise<void> => {
-            return promise.then(() => loadScript(src));
-        }, Promise.resolve());
+        try {
+            // Load scripts sequentially and wait for completion
+            for (const src of jsFiles) {
+                await loadScript(src);
+            }
+
+            // Initialize menu functionality after all scripts are loaded
+            setTimeout(() => {
+                initializeMenu();
+                isLoading.value = false; // Set loading to false when everything is ready
+            }, 200);
+        } catch (error) {
+            console.error('Error loading Sneat assets:', error);
+            isLoading.value = false; // Set loading to false even on error
+        }
+    };
+
+    const initializeMenu = () => {
+        // Initialize Bootstrap components
+        if (typeof (window as any).bootstrap !== 'undefined') {
+            // Initialize dropdowns
+            const dropdownElements = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            dropdownElements.forEach((el) => {
+                if (!el.hasAttribute('data-bs-initialized')) {
+                    new (window as any).bootstrap.Dropdown(el);
+                    el.setAttribute('data-bs-initialized', 'true');
+                }
+            });
+        }
+
+        // Initialize menu toggle functionality
+        const menuToggles = document.querySelectorAll('.menu-toggle');
+        menuToggles.forEach((toggle) => {
+            if (!toggle.hasAttribute('data-menu-initialized')) {
+                toggle.addEventListener('click', function (this: HTMLElement, e: Event) {
+                    e.preventDefault();
+                    const parentLi = this.closest('.menu-item') as HTMLElement;
+                    const subMenu = parentLi?.querySelector('.menu-sub') as HTMLElement;
+
+                    if (subMenu) {
+                        const isOpen = parentLi.classList.contains('open');
+
+                        // Close all other open menus at the same level
+                        const siblingMenus = parentLi.parentElement?.querySelectorAll('.menu-item.open') || [];
+                        siblingMenus.forEach((sibling: Element) => {
+                            if (sibling !== parentLi) {
+                                sibling.classList.remove('open');
+                                const siblingSubMenu = sibling.querySelector('.menu-sub') as HTMLElement;
+                                if (siblingSubMenu) {
+                                    siblingSubMenu.style.display = 'none';
+                                }
+                            }
+                        });
+
+                        // Toggle current menu
+                        if (isOpen) {
+                            parentLi.classList.remove('open');
+                            subMenu.style.display = 'none';
+                        } else {
+                            parentLi.classList.add('open');
+                            subMenu.style.display = 'block';
+                        }
+                    }
+                });
+                toggle.setAttribute('data-menu-initialized', 'true');
+            }
+        });
+
+        // Initialize mobile menu toggle
+        const mobileToggle = document.querySelector('.layout-menu-toggle');
+        if (mobileToggle && !mobileToggle.hasAttribute('data-mobile-initialized')) {
+            mobileToggle.addEventListener('click', function (e: Event) {
+                e.preventDefault();
+                const layoutMenu = document.querySelector('#layout-menu');
+                const overlay = document.querySelector('.layout-overlay');
+
+                if (layoutMenu && overlay) {
+                    const isVisible = layoutMenu.classList.contains('menu-expanded');
+
+                    if (isVisible) {
+                        layoutMenu.classList.remove('menu-expanded');
+                        overlay.classList.remove('show');
+                        document.body.classList.remove('menu-open');
+                    } else {
+                        layoutMenu.classList.add('menu-expanded');
+                        overlay.classList.add('show');
+                        document.body.classList.add('menu-open');
+                    }
+                }
+            });
+            mobileToggle.setAttribute('data-mobile-initialized', 'true');
+        }
+
+        // Handle overlay click to close mobile menu
+        const overlay = document.querySelector('.layout-overlay');
+        if (overlay && !overlay.hasAttribute('data-overlay-initialized')) {
+            overlay.addEventListener('click', function (this: HTMLElement) {
+                const layoutMenu = document.querySelector('#layout-menu');
+                if (layoutMenu) {
+                    layoutMenu.classList.remove('menu-expanded');
+                    this.classList.remove('show');
+                    document.body.classList.remove('menu-open');
+                }
+            });
+            overlay.setAttribute('data-overlay-initialized', 'true');
+        }
     };
 
     loadSneatAssets();
@@ -157,7 +260,7 @@ const logout = () => {
 </script>
 
 <template>
-    <div class="layout-wrapper layout-content-navbar">
+    <div :class="['layout-wrapper layout-content-navbar', { loading: isLoading, loaded: !isLoading }]">
         <div class="layout-container">
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -428,5 +531,60 @@ const logout = () => {
 <style scoped>
 .layout-wrapper {
     height: 100vh;
+}
+
+/* Menu styling improvements */
+.menu-item.open > .menu-sub {
+    display: block !important;
+}
+
+.menu-item > .menu-sub {
+    display: none;
+}
+
+.menu-toggle {
+    cursor: pointer;
+}
+
+.menu-toggle::after {
+    content: '';
+    display: inline-block;
+    margin-left: auto;
+    vertical-align: 0.255em;
+    border-top: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+    transition: transform 0.2s ease-in-out;
+}
+
+.menu-item.open > .menu-link.menu-toggle::after {
+    transform: rotate(180deg);
+}
+
+/* Mobile menu improvements */
+@media (max-width: 1199.98px) {
+    .layout-menu.menu-expanded {
+        transform: translateX(0) !important;
+    }
+
+    .layout-overlay.show {
+        display: block !important;
+        opacity: 1;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* Ensure proper loading of assets */
+.layout-wrapper.loading {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.layout-wrapper.loaded {
+    opacity: 1;
 }
 </style>
