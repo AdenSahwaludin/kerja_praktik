@@ -70,6 +70,7 @@ interface MenuItem {
     active?: boolean;
     action?: string;
     children?: MenuItem[];
+    isHeader?: boolean;
 }
 
 const menuItems: MenuItem[] = [
@@ -81,76 +82,70 @@ const menuItems: MenuItem[] = [
     },
     {
         label: 'Operasi Utama',
-        icon: 'bx bx-store',
+        isHeader: true,
+    },
+    {
+        label: 'Transaksi',
+        icon: 'bx bx-receipt',
         children: [
-            {
-                label: 'Transaksi',
-                icon: 'bx bx-receipt',
-                children: [
-                    { label: 'Transaksi Baru', route: 'transaksi.create', active: route().current('transaksi.create') },
-                    { label: 'Riwayat Transaksi', route: 'transaksi.index', active: route().current('transaksi.index') },
-                ],
-            },
-            {
-                label: 'Pembayaran',
-                icon: 'bx bx-credit-card',
-                children: [
-                    { label: 'Semua Pembayaran', route: 'pembayaran.index', active: route().current('pembayaran.index') },
-                    { label: 'Pembayaran Belum Selesai', route: 'pembayaran.pending', active: route().current('pembayaran.pending') },
-                ],
-            },
-            {
-                label: 'Pelanggan',
-                icon: 'bx bx-user',
-                route: 'pelanggan.index',
-                active: route().current('pelanggan.*'),
-            },
+            { label: 'Transaksi Baru', route: 'transaksi.create', active: route().current('transaksi.create') },
+            { label: 'Riwayat Transaksi', route: 'transaksi.index', active: route().current('transaksi.index') },
         ],
+    },
+    {
+        label: 'Pembayaran',
+        icon: 'bx bx-credit-card',
+        children: [
+            { label: 'Semua Pembayaran', route: 'pembayaran.index', active: route().current('pembayaran.index') },
+            { label: 'Pembayaran Belum Selesai', route: 'pembayaran.pending', active: route().current('pembayaran.pending') },
+        ],
+    },
+    {
+        label: 'Pelanggan',
+        icon: 'bx bx-user',
+        route: 'pelanggan.index',
+        active: route().current('pelanggan.*'),
     },
     {
         label: 'Manajemen',
-        icon: 'bx bx-cog',
+        isHeader: true,
+    },
+    {
+        label: 'Produk',
+        icon: 'bx bx-package',
         children: [
-            {
-                label: 'Produk',
-                icon: 'bx bx-package',
-                children: [
-                    { label: 'Daftar Produk', route: 'produk.index', active: route().current('produk.*') },
-                    { label: 'Daftar Kategori', route: 'kategori.index', active: route().current('kategori.*') },
-                ],
-            },
-            {
-                label: 'Pengguna',
-                icon: 'bx bx-user-circle',
-                route: 'pengguna.index',
-                active: route().current('pengguna.*'),
-            },
-            {
-                label: 'Laporan',
-                icon: 'bx bx-file',
-                route: 'laporan.index',
-                active: route().current('laporan.*'),
-            },
+            { label: 'Daftar Produk', route: 'produk.index', active: route().current('produk.*') },
+            { label: 'Daftar Kategori', route: 'kategori.index', active: route().current('kategori.*') },
         ],
     },
     {
+        label: 'Pengguna',
+        icon: 'bx bx-user-circle',
+        route: 'pengguna.index',
+        active: route().current('pengguna.*'),
+    },
+    {
+        label: 'Laporan',
+        icon: 'bx bx-file',
+        route: 'laporan.index',
+        active: route().current('laporan.*'),
+    },
+    {
         label: 'Pengaturan Sistem',
-        icon: 'bx bx-wrench',
+        isHeader: true,
+    },
+    {
+        label: 'Pengaturan',
+        icon: 'bx bx-cog',
         children: [
-            {
-                label: 'Pengaturan',
-                icon: 'bx bx-cog',
-                children: [
-                    { label: 'Profil Saya', route: 'profile.edit', active: route().current('profile.*') },
-                    { label: 'Pengaturan Sistem', route: 'settings.index', active: route().current('settings.*') },
-                ],
-            },
-            {
-                label: 'Logout',
-                icon: 'bx bx-power-off',
-                action: 'logout',
-            },
+            { label: 'Profil Saya', route: 'profile.edit', active: route().current('profile.*') },
+            { label: 'Pengaturan Sistem', route: 'settings.index', active: route().current('settings.*') },
         ],
+    },
+    {
+        label: 'Logout',
+        icon: 'bx bx-power-off',
+        action: 'logout',
     },
 ];
 
@@ -235,8 +230,13 @@ const logout = () => {
 
                 <ul class="menu-inner py-1">
                     <template v-for="(item, index) in menuItems" :key="index">
+                        <!-- Menu Header -->
+                        <li v-if="item.isHeader" class="menu-header small text-uppercase">
+                            <span class="menu-header-text">{{ item.label }}</span>
+                        </li>
+
                         <!-- Single Menu Item -->
-                        <li v-if="!item.children" :class="['menu-item', { active: item.active }]">
+                        <li v-else-if="!item.children" :class="['menu-item', { active: item.active }]">
                             <Link v-if="item.route" :href="route(item.route)" class="menu-link">
                                 <i :class="[item.icon, 'menu-icon', 'tf-icons']"></i>
                                 <div data-i18n="Analytics">{{ item.label }}</div>

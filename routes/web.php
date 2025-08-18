@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\KategoriController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -66,17 +68,8 @@ Route::middleware('auth')->group(function () {
     });
 
     // Manajemen Routes
-    Route::prefix('produk')->name('produk.')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Produk/Index');
-        })->name('index');
-    });
-
-    Route::prefix('kategori')->name('kategori.')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Kategori/Index');
-        })->name('index');
-    });
+    Route::resource('produk', ProdukController::class);
+    Route::resource('kategori', KategoriController::class);
 
     Route::prefix('pengguna')->name('pengguna.')->group(function () {
         Route::get('/', function () {
