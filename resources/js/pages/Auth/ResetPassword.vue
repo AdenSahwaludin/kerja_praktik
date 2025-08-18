@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SneatLayout from '@/layouts/SneatLayout.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     token: string;
@@ -22,7 +22,7 @@ const submit = () => {
         onFinish: () => form.reset('password', 'password_confirmation'),
         onError: (errors) => {
             console.error('Password reset errors:', errors);
-        }
+        },
     });
 };
 

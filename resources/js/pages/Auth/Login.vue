@@ -170,7 +170,7 @@ const togglePassword = () => {
                                 </div>
                             </form>
 
-                            <div class="text-center mb-3">
+                            <div class="mb-3 text-center">
                                 <Link :href="route('password.request')" class="btn btn-outline-primary w-100">
                                     <i class="bx bx-key me-1"></i>
                                     Forgot Password?
