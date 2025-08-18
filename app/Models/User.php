@@ -13,14 +13,24 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
+
     protected $fillable = [
-        'name',
+        'nama',
         'email',
-        'password',
+        'telepon',
+        'kata_sandi',
+        'role',
+        'terakhir_login',
     ];
 
     /**
@@ -29,8 +39,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'kata_sandi',
     ];
 
     /**
@@ -41,8 +50,32 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'terakhir_login' => 'datetime',
+            'kata_sandi' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the password for authentication.
+     */
+    public function getAuthPassword()
+    {
+        return $this->kata_sandi;
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     */
+    public function getAuthIdentifierName()
+    {
+        return $this->primaryKey;
+    }
+
+    /**
+     * Relationships
+     */
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_pengguna', 'id_pengguna');
     }
 }
