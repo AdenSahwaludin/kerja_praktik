@@ -123,30 +123,34 @@ onMounted(() => {
             }
         });
 
-        // Initialize mobile menu toggle
-        const mobileToggle = document.querySelector('.layout-menu-toggle');
-        if (mobileToggle && !mobileToggle.hasAttribute('data-mobile-initialized')) {
-            mobileToggle.addEventListener('click', function (e: Event) {
-                e.preventDefault();
-                const layoutMenu = document.querySelector('#layout-menu');
-                const overlay = document.querySelector('.layout-overlay');
+        // Initialize mobile menu toggle - Handle both sidebar and navbar toggles
+        const mobileToggles = document.querySelectorAll('.layout-menu-toggle');
+        mobileToggles.forEach((toggle) => {
+            if (!toggle.hasAttribute('data-mobile-initialized')) {
+                toggle.addEventListener('click', function (e: Event) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                if (layoutMenu && overlay) {
-                    const isVisible = layoutMenu.classList.contains('menu-expanded');
+                    const layoutMenu = document.querySelector('#layout-menu');
+                    const overlay = document.querySelector('.layout-overlay');
 
-                    if (isVisible) {
-                        layoutMenu.classList.remove('menu-expanded');
-                        overlay.classList.remove('show');
-                        document.body.classList.remove('menu-open');
-                    } else {
-                        layoutMenu.classList.add('menu-expanded');
-                        overlay.classList.add('show');
-                        document.body.classList.add('menu-open');
+                    if (layoutMenu && overlay) {
+                        const isVisible = layoutMenu.classList.contains('menu-expanded');
+
+                        if (isVisible) {
+                            layoutMenu.classList.remove('menu-expanded');
+                            overlay.classList.remove('show');
+                            document.body.classList.remove('menu-open');
+                        } else {
+                            layoutMenu.classList.add('menu-expanded');
+                            overlay.classList.add('show');
+                            document.body.classList.add('menu-open');
+                        }
                     }
-                }
-            });
-            mobileToggle.setAttribute('data-mobile-initialized', 'true');
-        }
+                });
+                toggle.setAttribute('data-mobile-initialized', 'true');
+            }
+        });
 
         // Handle overlay click to close mobile menu
         const overlay = document.querySelector('.layout-overlay');
@@ -484,38 +488,6 @@ const logout = () => {
                         <slot />
                     </div>
                     <!-- / Content -->
-
-                    <!-- Footer -->
-                    <footer class="content-footer footer bg-footer-theme">
-                        <div class="container-xxl d-flex justify-content-between flex-md-row flex-column flex-wrap py-2">
-                            <div class="mb-md-0 mb-2">
-                                ©
-                                <script>
-                                    document.write(new Date().getFullYear());
-                                </script>
-                                , made with ❤️ by
-                                <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
-                            </div>
-                            <div>
-                                <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                                <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-                                <a
-                                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                                    target="_blank"
-                                    class="footer-link me-4"
-                                    >Documentation</a
-                                >
-                                <a
-                                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                                    target="_blank"
-                                    class="footer-link me-4"
-                                    >Support</a
-                                >
-                            </div>
-                        </div>
-                    </footer>
-                    <!-- / Footer -->
-
                     <div class="content-backdrop fade"></div>
                 </div>
                 <!-- Content wrapper -->
@@ -524,7 +496,7 @@ const logout = () => {
         </div>
 
         <!-- Overlay -->
-        <div class="layout-overlay layout-menu-toggle"></div>
+        <div class="layout-overlay"></div>
     </div>
 </template>
 
@@ -559,13 +531,35 @@ const logout = () => {
 }
 
 .menu-item.open > .menu-link.menu-toggle::after {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
 }
 
 /* Mobile menu improvements */
 @media (max-width: 1199.98px) {
+    #layout-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1040;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
     .layout-menu.menu-expanded {
         transform: translateX(0) !important;
+    }
+
+    .layout-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1030;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
     }
 
     .layout-overlay.show {
@@ -575,6 +569,10 @@ const logout = () => {
 
     body.menu-open {
         overflow: hidden;
+    }
+
+    .layout-menu-toggle {
+        cursor: pointer;
     }
 }
 

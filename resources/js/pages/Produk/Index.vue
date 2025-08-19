@@ -274,8 +274,18 @@ const resetFilters = () => {
         </div>
 
         <!-- Delete Confirmation Modal -->
-        <div class="modal fade" :class="{ show: showDeleteModal }" :style="{ display: showDeleteModal ? 'block' : 'none' }" tabindex="-1">
-            <div class="modal-dialog">
+        <div
+            class="modal fade"
+            :class="{ show: showDeleteModal }"
+            :style="{
+                display: showDeleteModal ? 'block' : 'none',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }"
+            tabindex="-1"
+        >
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Konfirmasi Hapus</h5>
@@ -298,6 +308,6 @@ const resetFilters = () => {
                 </div>
             </div>
         </div>
-        <div v-if="showDeleteModal" class="modal-backdrop fade show"></div>
-    </DashboardLayout>
+        <div v-if="showDeleteModal" class="modal-backdrop fade show"></div
+    ></DashboardLayout>
 </template>
