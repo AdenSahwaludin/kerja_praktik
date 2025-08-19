@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
-import { Head, Link, useForm, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 interface User {
     id: number;
@@ -90,9 +89,7 @@ const formatDate = (date: string) => {
     <Head title="Manajemen Pengguna" />
 
     <DashboardLayout>
-        <h4 class="fw-bold mb-4 py-3">
-            <span class="text-muted fw-light">Manajemen /</span> Pengguna
-        </h4>
+        <h4 class="fw-bold mb-4 py-3"><span class="text-muted fw-light">Manajemen /</span> Pengguna</h4>
 
         <!-- Filters and Search -->
         <div class="card mb-4">
@@ -145,7 +142,7 @@ const formatDate = (date: string) => {
             </div>
 
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table-hover table">
                     <thead class="table-light">
                         <tr>
                             <th>Nama</th>
@@ -190,38 +187,25 @@ const formatDate = (date: string) => {
                             <td>{{ formatDate(user.created_at) }}</td>
                             <td>
                                 <div class="dropdown">
-                                    <button
-                                        class="btn btn-sm btn-outline-secondary dropdown-toggle"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                    >
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <Link
-                                                :href="route('pengguna.show', user.id)"
-                                                class="dropdown-item"
-                                            >
+                                            <Link :href="route('pengguna.show', user.id)" class="dropdown-item">
                                                 <i class="bx bx-show me-2"></i>
                                                 Lihat Detail
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link
-                                                :href="route('pengguna.edit', user.id)"
-                                                class="dropdown-item"
-                                            >
+                                            <Link :href="route('pengguna.edit', user.id)" class="dropdown-item">
                                                 <i class="bx bx-edit me-2"></i>
                                                 Edit
                                             </Link>
                                         </li>
                                         <li><hr class="dropdown-divider" /></li>
                                         <li>
-                                            <button
-                                                @click="deleteUser(user)"
-                                                class="dropdown-item text-danger"
-                                            >
+                                            <button @click="deleteUser(user)" class="dropdown-item text-danger">
                                                 <i class="bx bx-trash me-2"></i>
                                                 Hapus
                                             </button>
@@ -231,7 +215,7 @@ const formatDate = (date: string) => {
                             </td>
                         </tr>
                         <tr v-if="pengguna.data.length === 0">
-                            <td colspan="7" class="text-center py-4">
+                            <td colspan="7" class="py-4 text-center">
                                 <i class="bx bx-user-x display-4 text-muted"></i>
                                 <p class="text-muted mt-2">Tidak ada pengguna ditemukan</p>
                             </td>
@@ -245,18 +229,12 @@ const formatDate = (date: string) => {
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm justify-content-center mb-0">
                         <li v-for="link in pengguna.links" :key="link.label" :class="['page-item', { active: link.active, disabled: !link.url }]">
-                            <Link
-                                v-if="link.url"
-                                :href="link.url"
-                                class="page-link"
-                                v-html="link.label"
-                                preserve-state
-                            />
+                            <Link v-if="link.url" :href="link.url" class="page-link" v-html="link.label" preserve-state />
                             <span v-else class="page-link" v-html="link.label" />
                         </li>
                     </ul>
                 </nav>
-                <div class="text-center mt-2 text-muted small">
+                <div class="text-muted small mt-2 text-center">
                     Menampilkan {{ pengguna.from }} - {{ pengguna.to }} dari {{ pengguna.total }} pengguna
                 </div>
             </div>

@@ -23,8 +23,8 @@ class PenggunaController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('telepon', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('telepon', 'like', "%{$search}%");
             });
         }
 
@@ -160,7 +160,7 @@ class PenggunaController extends Controller
         ]);
 
         $status = $pengguna->aktif ? 'diaktifkan' : 'dinonaktifkan';
-        
+
         return redirect()->route('pengguna.index')
             ->with('success', "Pengguna berhasil {$status}.");
     }

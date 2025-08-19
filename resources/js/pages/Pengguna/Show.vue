@@ -23,7 +23,7 @@ const formatDate = (dateString: string) => {
         month: 'long',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
     });
 };
 
@@ -31,7 +31,7 @@ const getRoleBadgeClass = (role: string) => {
     const roleClasses = {
         admin: 'bg-danger',
         manager: 'bg-warning',
-        kasir: 'bg-info'
+        kasir: 'bg-info',
     };
     return roleClasses[role] || 'bg-secondary';
 };
@@ -42,9 +42,7 @@ const getRoleBadgeClass = (role: string) => {
 
     <DashboardLayout>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold py-3 mb-0">
-                <span class="text-muted fw-light">Manajemen / Pengguna /</span> Detail Pengguna
-            </h4>
+            <h4 class="fw-bold mb-0 py-3"><span class="text-muted fw-light">Manajemen / Pengguna /</span> Detail Pengguna</h4>
             <div class="d-flex gap-2">
                 <Link :href="route('pengguna.edit', pengguna.id)" class="btn btn-primary">
                     <i class="bx bx-edit-alt me-1"></i>
@@ -73,7 +71,7 @@ const getRoleBadgeClass = (role: string) => {
                                     <h6 class="text-muted mb-1">Nama Lengkap</h6>
                                     <p class="fs-5 fw-semibold mb-0">{{ pengguna.nama }}</p>
                                 </div>
-                                
+
                                 <div class="mb-4">
                                     <h6 class="text-muted mb-1">Email</h6>
                                     <p class="mb-0">
@@ -141,7 +139,7 @@ const getRoleBadgeClass = (role: string) => {
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="timeline-item" v-if="pengguna.updated_at !== pengguna.created_at">
                                 <div class="timeline-marker bg-info"></div>
                                 <div class="timeline-content">
@@ -180,12 +178,12 @@ const getRoleBadgeClass = (role: string) => {
                                 <i class="bx bx-edit-alt me-2"></i>
                                 Edit Pengguna
                             </Link>
-                            
+
                             <a :href="`mailto:${pengguna.email}`" class="btn btn-outline-info">
                                 <i class="bx bx-envelope me-2"></i>
                                 Kirim Email
                             </a>
-                            
+
                             <a v-if="pengguna.telepon" :href="`tel:${pengguna.telepon}`" class="btn btn-outline-success">
                                 <i class="bx bx-phone me-2"></i>
                                 Hubungi
@@ -203,25 +201,19 @@ const getRoleBadgeClass = (role: string) => {
                         <div v-if="pengguna.role === 'admin'" class="text-center">
                             <i class="bx bx-shield-check text-danger display-4"></i>
                             <h6 class="mt-2">Administrator</h6>
-                            <p class="text-muted small mb-0">
-                                Memiliki akses penuh ke semua fitur sistem
-                            </p>
+                            <p class="text-muted small mb-0">Memiliki akses penuh ke semua fitur sistem</p>
                         </div>
-                        
+
                         <div v-else-if="pengguna.role === 'manager'" class="text-center">
                             <i class="bx bx-user-check text-warning display-4"></i>
                             <h6 class="mt-2">Manager</h6>
-                            <p class="text-muted small mb-0">
-                                Mengelola operasional dan laporan
-                            </p>
+                            <p class="text-muted small mb-0">Mengelola operasional dan laporan</p>
                         </div>
-                        
+
                         <div v-else-if="pengguna.role === 'kasir'" class="text-center">
                             <i class="bx bx-money text-info display-4"></i>
                             <h6 class="mt-2">Kasir</h6>
-                            <p class="text-muted small mb-0">
-                                Melakukan transaksi dan penjualan
-                            </p>
+                            <p class="text-muted small mb-0">Melakukan transaksi dan penjualan</p>
                         </div>
                     </div>
                 </div>
@@ -236,17 +228,17 @@ const getRoleBadgeClass = (role: string) => {
                             <div class="flex-shrink-0">
                                 <span class="badge bg-success fs-6">Aktif</span>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-0">Akun Aktif</h6>
                                 <small class="text-muted">Dapat mengakses sistem</small>
                             </div>
                         </div>
-                        
+
                         <div class="d-flex align-items-center">
                             <div class="flex-shrink-0">
                                 <i class="bx bx-check-circle text-success"></i>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-0">Email Terverifikasi</h6>
                                 <small class="text-muted">{{ pengguna.email }}</small>
                             </div>

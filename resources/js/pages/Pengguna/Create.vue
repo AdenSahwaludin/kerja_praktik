@@ -33,9 +33,7 @@ const submit = () => {
 
     <DashboardLayout>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold py-3 mb-0">
-                <span class="text-muted fw-light">Manajemen / Pengguna /</span> Tambah Pengguna
-            </h4>
+            <h4 class="fw-bold mb-0 py-3"><span class="text-muted fw-light">Manajemen / Pengguna /</span> Tambah Pengguna</h4>
             <Link :href="route('pengguna.index')" class="btn btn-outline-secondary">
                 <i class="bx bx-arrow-back me-1"></i>
                 Kembali
@@ -100,13 +98,7 @@ const submit = () => {
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label" for="role">Role</label>
-                                    <select
-                                        id="role"
-                                        v-model="form.role"
-                                        class="form-select"
-                                        :class="{ 'is-invalid': form.errors.role }"
-                                        required
-                                    >
+                                    <select id="role" v-model="form.role" class="form-select" :class="{ 'is-invalid': form.errors.role }" required>
                                         <option value="">Pilih Role</option>
                                         <option v-for="role in roles" :key="role" :value="role">
                                             {{ role.charAt(0).toUpperCase() + role.slice(1) }}
@@ -131,11 +123,7 @@ const submit = () => {
                                             placeholder="Masukkan kata sandi"
                                             required
                                         />
-                                        <button
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            @click="showPassword = !showPassword"
-                                        >
+                                        <button type="button" class="btn btn-outline-secondary" @click="showPassword = !showPassword">
                                             <i :class="showPassword ? 'bx bx-hide' : 'bx bx-show'"></i>
                                         </button>
                                     </div>
@@ -154,11 +142,7 @@ const submit = () => {
                                             placeholder="Ulangi kata sandi"
                                             required
                                         />
-                                        <button
-                                            type="button"
-                                            class="btn btn-outline-secondary"
-                                            @click="showConfirmPassword = !showConfirmPassword"
-                                        >
+                                        <button type="button" class="btn btn-outline-secondary" @click="showConfirmPassword = !showConfirmPassword">
                                             <i :class="showConfirmPassword ? 'bx bx-hide' : 'bx bx-show'"></i>
                                         </button>
                                     </div>
@@ -166,14 +150,8 @@ const submit = () => {
                             </div>
 
                             <div class="d-flex justify-content-end gap-2">
-                                <Link :href="route('pengguna.index')" class="btn btn-outline-secondary">
-                                    Batal
-                                </Link>
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                    :disabled="form.processing"
-                                >
+                                <Link :href="route('pengguna.index')" class="btn btn-outline-secondary"> Batal </Link>
+                                <button type="submit" class="btn btn-primary" :disabled="form.processing">
                                     <span v-if="form.processing" class="spinner-border spinner-border-sm me-2"></span>
                                     <i v-else class="bx bx-save me-1"></i>
                                     {{ form.processing ? 'Menyimpan...' : 'Simpan Pengguna' }}
@@ -212,7 +190,7 @@ const submit = () => {
                         <h6 class="mb-0">Tips Keamanan</h6>
                     </div>
                     <div class="card-body">
-                        <ul class="list-unstyled mb-0 small">
+                        <ul class="list-unstyled small mb-0">
                             <li class="mb-2">
                                 <i class="bx bx-check text-success me-1"></i>
                                 Gunakan kata sandi minimal 8 karakter
