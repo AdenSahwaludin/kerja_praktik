@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Hash;
 $user = User::firstOrCreate(
     ['email' => 'test@example.com'],
     [
-        'name' => 'Test User',
-        'password' => Hash::make('password123'),
+        'nama' => 'Test User',
+        'kata_sandi' => Hash::make('password123'),
     ]
 );
 

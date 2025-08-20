@@ -3,6 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Kategori;
+use App\Models\Produk;
+use App\Models\Pelanggan;
+use App\Models\Transaksi;
+use App\Models\Pembayaran;
+use App\Models\Detail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +21,75 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create default admin user
+        $user = User::create([
+            'nama' => 'Aden Sahwaludin',
+            'email' => 'sekha1211@gmail.com',
+            'telepon' => '081292596948',
+            'role' => 'admin',
+            'kata_sandi' => Hash::make('Margamulya1'),
+            'terakhir_login' => now(),
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create example category
+        $kategori = Kategori::create([
+            'nama' => 'Contoh Kategori',
+        ]);
+
+        // Create example product
+        $produk = Produk::create([
+            'id_produk'     => '0000000000001',
+            'id_kategori'   => $kategori->id_kategori,
+            'nama'          => 'Contoh Produk',
+            'gambar'        => null,
+            'nomor_bpom'    => null,
+            'harga'         => 10000,
+            'biaya_produk'  => 8000,
+            'stok'          => 50,
+            'batas_stok'    => 10,
+        ]);
+
+        // Create example customer
+        $pelanggan = Pelanggan::create([
+            'id_pelanggan'  => 'PLG0001',
+            'nama'          => 'Contoh Pelanggan',
+            'email'         => 'pelanggan@example.com',
+            'telepon'       => '081234567890',
+            'kota'          => 'Contoh Kota',
+            'alamat'        => 'Jl. Contoh Alamat No.1',
+        ]);
+
+        // Create example transaction
+        $idTransaksi = Str::upper(Str::random(28));
+        $transaksi = Transaksi::create([
+            'id_transaksi'    => $idTransaksi,
+            'id_pengguna'     => $user->id,
+            'id_pelanggan'    => $pelanggan->id_pelanggan,
+            'tanggal'         => now(),
+            'total'           => $produk->harga,
+            'status'          => 'menunggu',
+            'catatan'         => null,
+            'diskon'          => 0,
+            'pajak'           => 0,
+            'biaya_pengiriman'=> 5000,
+        ]);
+
+        // Create example payment
+        Pembayaran::create([
+            'id_pembayaran' => Str::upper(Str::random(20)),
+            'id_transaksi'  => $transaksi->id_transaksi,
+            'metode'        => 'tunai',
+            'jumlah'        => $transaksi->total,
+            'keterangan'    => null,
+            'tanggal'       => now(),
+        ]);
+
+        // Create example detail record
+        Detail::create([
+            'id_transaksi'  => $transaksi->id_transaksi,
+            'id_produk'     => $produk->id_produk,
+            'jumlah'        => 1,
+            'harga_satuan'  => $produk->harga,
         ]);
     }
 }

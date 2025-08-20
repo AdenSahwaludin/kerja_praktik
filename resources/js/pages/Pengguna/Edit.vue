@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 interface User {
     id: number;
-    nama: string;
+    name: string;
     email: string;
     telepon?: string;
     role: string;
@@ -17,7 +17,7 @@ const props = defineProps<{
 }>();
 
 const form = useForm({
-    nama: props.pengguna.nama,
+    nama: props.pengguna.name,
     email: props.pengguna.email,
     telepon: props.pengguna.telepon || '',
     role: props.pengguna.role,
@@ -187,7 +187,7 @@ const submit = () => {
                     <div class="card-body">
                         <div class="mb-3">
                             <small class="text-muted">Nama:</small>
-                            <div class="fw-semibold">{{ pengguna.nama }}</div>
+                            <div class="fw-semibold">{{ pengguna.name }}</div>
                         </div>
                         <div class="mb-3">
                             <small class="text-muted">Email:</small>

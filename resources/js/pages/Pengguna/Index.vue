@@ -4,7 +4,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 interface User {
     id: number;
-    nama: string;
+    name: string; // Changed from 'nama' to 'name'
     email: string;
     telepon?: string;
     role: string;
@@ -56,7 +56,7 @@ const clearFilters = () => {
 
 // Delete user
 const deleteUser = (user: User) => {
-    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.nama}"?`)) {
+    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.name}"?`)) {
         router.delete(route('pengguna.destroy', user.id), {
             preserveScroll: true,
         });
@@ -160,11 +160,11 @@ const formatDate = (date: string) => {
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm me-2">
                                         <div class="avatar-initial bg-label-primary rounded-circle">
-                                            {{ user.nama.charAt(0).toUpperCase() }}
+                                            {{ user.name?.charAt(0).toUpperCase() || 'U' }}
                                         </div>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">{{ user.nama }}</h6>
+                                        <h6 class="mb-0">{{ user.name || 'Unknown' }}</h6>
                                     </div>
                                 </div>
                             </td>
@@ -174,8 +174,8 @@ const formatDate = (date: string) => {
                                 <span v-else class="text-muted">-</span>
                             </td>
                             <td>
-                                <span :class="['badge', getRoleBadgeColor(user.role)]">
-                                    {{ user.role.charAt(0).toUpperCase() + user.role.slice(1) }}
+                                <span :class="['badge', getRoleBadgeColor(user.role || 'user')]">
+                                    {{ user.role?.charAt(0).toUpperCase() + user.role?.slice(1) || 'User' }}
                                 </span>
                             </td>
                             <td>

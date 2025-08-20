@@ -18,11 +18,11 @@ class PenggunaController extends Controller
     {
         $query = User::query();
 
-        // Search functionality
+        // Search functionality (use 'name' column)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
+                $q->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('telepon', 'like', "%{$search}%");
             });
@@ -34,7 +34,15 @@ class PenggunaController extends Controller
         }
 
         // Sorting
-        $sortBy = $request->get('sort_by', 'nama');
+        // Sorting: map front-end 'nama' to DB 'name', ensure only allowed columns
+        $sortBy = $request->get('sort_by', 'name');
+        if ($sortBy === 'nama') {
+            $sortBy = 'name';
+        }
+        $allowedSorts = ['name', 'email', 'telepon', 'role', 'created_at', 'updated_at'];
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'name';
+        }
         $sortOrder = $request->get('sort_order', 'asc');
         $query->orderBy($sortBy, $sortOrder);
 
@@ -71,7 +79,7 @@ class PenggunaController extends Controller
         ]);
 
         User::create([
-            'nama' => $request->nama,
+            'name' => $request->nama,
             'email' => $request->email,
             'telepon' => $request->telepon,
             'role' => $request->role,
@@ -117,7 +125,7 @@ class PenggunaController extends Controller
         ]);
 
         $updateData = [
-            'nama' => $request->nama,
+            'name' => $request->nama,
             'email' => $request->email,
             'telepon' => $request->telepon,
             'role' => $request->role,

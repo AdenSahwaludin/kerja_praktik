@@ -114,11 +114,12 @@ const submit = () => {
                                 <button class="btn btn-primary d-grid w-100" type="submit" :disabled="form.processing">
                                     <span
                                         v-if="form.processing"
-                                        class="spinner-border spinner-border-sm me-2"
+                                        class="spinner-border spinner-border-sm"
                                         role="status"
                                         aria-hidden="true"
+                                        style="margin: auto"
                                     ></span>
-                                    Send Reset Link
+                                    <span v-if="!form.processing">Send Reset Link</span>
                                 </button>
                             </form>
 

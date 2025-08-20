@@ -53,8 +53,9 @@ class PasswordResetController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
+                // Update custom kata_sandi field instead of default password
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
+                    'kata_sandi' => Hash::make($request->password),
                 ])->save();
             }
         );

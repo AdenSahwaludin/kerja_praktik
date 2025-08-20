@@ -4,7 +4,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
 interface User {
     id: number;
-    nama: string;
+    name: string;
     email: string;
     telepon?: string;
     role: string;
@@ -69,7 +69,7 @@ const getRoleBadgeClass = (role: string) => {
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <h6 class="text-muted mb-1">Nama Lengkap</h6>
-                                    <p class="fs-5 fw-semibold mb-0">{{ pengguna.nama }}</p>
+                                    <p class="fs-5 fw-semibold mb-0">{{ pengguna.name }}</p>
                                 </div>
 
                                 <div class="mb-4">

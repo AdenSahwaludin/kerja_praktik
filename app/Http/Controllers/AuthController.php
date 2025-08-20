@@ -11,17 +11,11 @@ use Inertia\Inertia;
 
 class AuthController extends Controller
 {
-    /**
-     * Display the login page.
-     */
     public function login()
     {
         return Inertia::render('Auth/Login');
     }
 
-    /**
-     * Handle login request.
-     */
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
@@ -31,7 +25,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-
+            // For Inertia SPA: force full reload to ensure CSS assets are reloaded
+            if ($request->header('X-Inertia')) {
+                return Inertia::location(route('dashboard'));
+            }
+            // Fallback redirect for non-Inertia requests
             return redirect()->intended('/dashboard');
         }
 
@@ -76,10 +74,13 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        // For Inertia SPA: force full reload to ensure CSS assets are reloaded promptly
+        if ($request->header('X-Inertia')) {
+            return Inertia::location(route('home'));
+        }
+        return redirect()->route('home');
     }
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SneatLayout from '@/layouts/SneatLayout.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     token: string;
@@ -29,13 +29,44 @@ const submit = () => {
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
 
-// Get flash messages
-const status = computed(() => page.props.status);
-const errors = computed(() => page.props.errors);
+// Success toast (reset status)
+const status = computed(() => page.props.status as string | undefined);
+const showSuccess = ref(false);
+watch(status, (val) => (showSuccess.value = Boolean(val)));
+const clearSuccess = () => (showSuccess.value = false);
+// Error toast (email errors)
+const showError = ref(false);
+watch(
+    () => form.errors.email,
+    (val) => (showError.value = Boolean(val)),
+);
+const clearError = () => {
+    form.clearErrors('email');
+    showError.value = false;
+};
 </script>
 
 <template>
     <SneatLayout title="Reset Password" body-class="light-style customizer-hide">
+        <!-- Toast Notifications -->
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-absolute end-0 top-0 p-3">
+                <!-- Success Toast -->
+                <div v-if="showSuccess" class="toast align-items-center text-bg-success show border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">{{ status }}</div>
+                        <button type="button" class="btn-close btn-close-white m-auto me-2" @click="clearSuccess"></button>
+                    </div>
+                </div>
+                <!-- Error Toast -->
+                <div v-if="showError" class="toast align-items-center text-bg-danger show border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">{{ form.errors.email }}</div>
+                        <button type="button" class="btn-close btn-close-white m-auto me-2" @click="clearError"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container-xxl">
             <div class="authentication-wrapper authentication-basic container-p-y">
                 <div class="authentication-inner">
@@ -107,16 +138,6 @@ const errors = computed(() => page.props.errors);
 
                             <h4 class="mb-2">Reset Password 🔒</h4>
                             <p class="mb-4">Your new password must be different from previous used passwords</p>
-
-                            <!-- Success Message -->
-                            <div v-if="status" class="alert alert-success mb-3" role="alert">
-                                <div class="alert-body">{{ status }}</div>
-                            </div>
-
-                            <!-- General Error Message -->
-                            <div v-if="form.errors.email" class="alert alert-danger mb-3" role="alert">
-                                <div class="alert-body">{{ form.errors.email }}</div>
-                            </div>
 
                             <form @submit.prevent="submit" class="mb-3">
                                 <div class="form-password-toggle mb-3">
