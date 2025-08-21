@@ -355,7 +355,16 @@ const logout = () => {
                         </li>
 
                         <!-- Menu with Children -->
-                        <li v-else :class="['menu-item', { open: item.children && item.children.some(child => child.active), active: item.children && item.children.some(child => child.active) } ]">
+                        <li
+                            v-else
+                            :class="[
+                                'menu-item',
+                                {
+                                    open: item.children && item.children.some((child) => child.active),
+                                    active: item.children && item.children.some((child) => child.active),
+                                },
+                            ]"
+                        >
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i :class="[item.icon, 'menu-icon', 'tf-icons']"></i>
                                 <div data-i18n="Layouts">{{ item.label }}</div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Head, Link, router } from '@inertiajs/vue3';
 import DashboardLayout from '@/layouts/DashboardLayout.vue';
-import { ref, computed } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 interface User {
     id: number;
@@ -39,9 +39,10 @@ const roleFilter = ref('');
 
 const filteredPengguna = computed(() => {
     return props.pengguna.data.filter((user) => {
-        const matchesSearch = user.nama.toLowerCase().includes(searchTerm.value.toLowerCase())
-            || user.email.toLowerCase().includes(searchTerm.value.toLowerCase())
-            || (user.telepon ?? '').toLowerCase().includes(searchTerm.value.toLowerCase());
+        const matchesSearch =
+            user.nama.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+            (user.telepon ?? '').toLowerCase().includes(searchTerm.value.toLowerCase());
         const matchesRole = roleFilter.value ? user.role === roleFilter.value : true;
         return matchesSearch && matchesRole;
     });
@@ -49,7 +50,7 @@ const filteredPengguna = computed(() => {
 
 const deleteUser = (user: User) => {
     if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.nama}"?`)) {
-    router.delete(route('pengguna.destroy', user.id), {
+        router.delete(route('pengguna.destroy', user.id), {
             preserveScroll: true,
         });
     }
@@ -97,12 +98,7 @@ const formatDate = (date: string) => {
                 <div class="row g-3 align-items-end">
                     <div class="col-md-4">
                         <label class="form-label">Cari Pengguna</label>
-                        <input
-                            v-model="searchTerm"
-                            type="text"
-                            class="form-control"
-                            placeholder="Cari nama, email,atau telepon..."
-                        />
+                        <input v-model="searchTerm" type="text" class="form-control" placeholder="Cari nama, email,atau telepon..." />
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Filter Role</label>
@@ -115,7 +111,15 @@ const formatDate = (date: string) => {
                     </div>
                     <div class="col-md-5">
                         <div class="d-flex gap-2">
-                            <button @click="() => { searchTerm=''; roleFilter=''; }" class="btn btn-outline-secondary">
+                            <button
+                                @click="
+                                    () => {
+                                        searchTerm = '';
+                                        roleFilter = '';
+                                    }
+                                "
+                                class="btn btn-outline-secondary"
+                            >
                                 <i class="bx bx-refresh me-1"></i>
                                 Reset Filters
                             </button>
@@ -223,7 +227,11 @@ const formatDate = (date: string) => {
             <div v-if="filteredPengguna.length > props.pengguna.per_page" class="card-footer">
                 <nav aria-label="Page navigation">
                     <ul class="pagination pagination-sm justify-content-center mb-0">
-                        <li v-for="link in props.pengguna.links" :key="link.label" :class="['page-item', { active: link.active, disabled: !link.url }]">
+                        <li
+                            v-for="link in props.pengguna.links"
+                            :key="link.label"
+                            :class="['page-item', { active: link.active, disabled: !link.url }]"
+                        >
                             <Link v-if="link.url" :href="link.url" class="page-link" v-html="link.label" preserve-state />
                             <span v-else class="page-link" v-html="link.label" />
                         </li>
