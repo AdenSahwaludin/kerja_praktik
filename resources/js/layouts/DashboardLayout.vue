@@ -443,7 +443,7 @@ const logout = () => {
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">{{ user?.name }}</span>
+                                                    <span class="fw-semibold d-block">{{ user?.nama }}</span>
                                                     <small class="text-muted">{{ user?.email }}</small>
                                                 </div>
                                             </div>

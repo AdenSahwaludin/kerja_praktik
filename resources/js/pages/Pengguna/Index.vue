@@ -4,7 +4,7 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 
 interface User {
     id: number;
-    name: string; // Changed from 'nama' to 'name'
+    nama: string; // Changed from 'nama' to 'name'
     email: string;
     telepon?: string;
     role: string;
@@ -56,7 +56,7 @@ const clearFilters = () => {
 
 // Delete user
 const deleteUser = (user: User) => {
-    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.name}"?`)) {
+    if (confirm(`Apakah Anda yakin ingin menghapus pengguna "${user.nama}"?`)) {
         router.delete(route('pengguna.destroy', user.id), {
             preserveScroll: true,
         });
@@ -160,11 +160,11 @@ const formatDate = (date: string) => {
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm me-2">
                                         <div class="avatar-initial bg-label-primary rounded-circle">
-                                            {{ user.name?.charAt(0).toUpperCase() || 'U' }}
+                                            {{ user.nama?.charAt(0).toUpperCase() || 'U' }}
                                         </div>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0">{{ user.name || 'Unknown' }}</h6>
+                                        <h6 class="mb-0">{{ user.nama || 'Unknown' }}</h6>
                                     </div>
                                 </div>
                             </td>

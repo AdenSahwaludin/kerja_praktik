@@ -18,11 +18,11 @@ class PenggunaController extends Controller
     {
         $query = User::query();
 
-        // Search functionality (use 'name' column)
+        // Search functionality (use 'nama' column)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('nama', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('telepon', 'like', "%{$search}%");
             });
@@ -34,14 +34,14 @@ class PenggunaController extends Controller
         }
 
         // Sorting
-        // Sorting: map front-end 'nama' to DB 'name', ensure only allowed columns
-        $sortBy = $request->get('sort_by', 'name');
-        if ($sortBy === 'nama') {
-            $sortBy = 'name';
+        // Sorting: ensure only allowed columns, map old 'name' to 'nama'
+        $sortBy = $request->get('sort_by', 'nama');
+        if ($sortBy === 'name') {
+            $sortBy = 'nama';
         }
-        $allowedSorts = ['name', 'email', 'telepon', 'role', 'created_at', 'updated_at'];
-        if (!in_array($sortBy, $allowedSorts)) {
-            $sortBy = 'name';
+        $allowedSorts = ['nama', 'email', 'telepon', 'role', 'created_at', 'updated_at'];
+        if (!in_array($sortBy, $allowedSorts, true)) {
+            $sortBy = 'nama';
         }
         $sortOrder = $request->get('sort_order', 'asc');
         $query->orderBy($sortBy, $sortOrder);
@@ -79,7 +79,7 @@ class PenggunaController extends Controller
         ]);
 
         User::create([
-            'name' => $request->nama,
+            'nama' => $request->nama,
             'email' => $request->email,
             'telepon' => $request->telepon,
             'role' => $request->role,
@@ -125,7 +125,7 @@ class PenggunaController extends Controller
         ]);
 
         $updateData = [
-            'name' => $request->nama,
+            'nama' => $request->nama,
             'email' => $request->email,
             'telepon' => $request->telepon,
             'role' => $request->role,

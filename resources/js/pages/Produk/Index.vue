@@ -41,6 +41,10 @@ const selectedKategori = ref('');
 const showDeleteModal = ref(false);
 const selectedProduk = ref<Produk | null>(null);
 
+// Import functionality
+const showImportModal = ref(false);
+const importForm = useForm<{ file: File | null }>({ file: null });
+
 const deleteForm = useForm({});
 
 const filteredProduk = computed(() => {
@@ -96,6 +100,28 @@ const resetFilters = () => {
     searchTerm.value = '';
     selectedKategori.value = '';
 };
+
+const openImport = () => {
+    showImportModal.value = true;
+};
+
+const submitImport = () => {
+    importForm.post(route('produk.import'), {
+        preserveState: true,
+        onSuccess: () => {
+            showImportModal.value = false;
+            importForm.reset();
+        },
+    });
+};
+
+/**
+ * Handle file input change for import
+ */
+const onImportFileChange = (e: Event) => {
+    const input = e.target as HTMLInputElement;
+    importForm.file = input.files && input.files[0] ? input.files[0] : null;
+};
 </script>
 
 <template>
@@ -108,14 +134,14 @@ const resetFilters = () => {
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Daftar Produk</h5>
                 <div class="d-flex gap-2">
-                    <button class="btn btn-outline-secondary btn-sm">
+                    <button @click="openImport" class="btn btn-outline-secondary btn-sm">
                         <i class="bx bx-import me-1"></i>
                         Import
                     </button>
-                    <button class="btn btn-outline-primary btn-sm">
+                    <a :href="route('produk.export')" class="btn btn-outline-primary btn-sm">
                         <i class="bx bx-export me-1"></i>
                         Export
-                    </button>
+                    </a>
                     <Link :href="route('produk.create')" class="btn btn-primary btn-sm">
                         <i class="bx bx-plus me-1"></i>
                         Tambah Produk
@@ -308,6 +334,38 @@ const resetFilters = () => {
                 </div>
             </div>
         </div>
-        <div v-if="showDeleteModal" class="modal-backdrop fade show"></div
-    ></DashboardLayout>
+        <div v-if="showDeleteModal" class="modal-backdrop fade show"></div>
+
+        <!-- Import Modal -->
+        <div
+            class="modal fade"
+            :class="{ show: showImportModal }"
+            :style="{ display: showImportModal ? 'block' : 'none', backgroundColor: 'rgba(0,0,0,0.5)' }"
+            tabindex="-1"
+        >
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import Produk</h5>
+                        <button type="button" class="btn-close" @click="showImportModal = false"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="submitImport">
+                            <div class="mb-3">
+                                <input type="file" class="form-control" @change="onImportFileChange" accept=".csv" required />
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-secondary me-2" @click="showImportModal = false">Batal</button>
+                                <button type="submit" class="btn btn-primary" :disabled="importForm.processing">
+                                    <span v-if="importForm.processing" class="spinner-border spinner-border-sm me-1"></span>
+                                    Import
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="showImportModal" class="modal-backdrop fade show"></div>
+    </DashboardLayout>
 </template>

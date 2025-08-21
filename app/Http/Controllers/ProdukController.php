@@ -142,4 +142,58 @@ class ProdukController extends Controller
 
         return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
+    /**
+     * Export products as CSV.
+     */
+    public function export()
+    {
+        $fileName = 'produk_export_'.now()->format('Ymd_His').'.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ];
+        $callback = function () {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['ID Produk','Nama','Kategori','Harga','Biaya Produk','Stok','Batas Stok','Nomor BPOM']);
+            Produk::with('kategori')->chunk(100, function ($produks) use ($handle) {
+                foreach ($produks as $p) {
+                    fputcsv($handle, [
+                        $p->id_produk,
+                        $p->nama,
+                        $p->kategori?->nama,
+                        $p->harga,
+                        $p->biaya_produk,
+                        $p->stok,
+                        $p->batas_stok,
+                        $p->nomor_bpom,
+                    ]);
+                }
+            });
+            fclose($handle);
+        };
+        return response()->streamDownload($callback, $fileName, $headers);
+    }
+    /**
+     * Import products from CSV.
+     */
+    public function import(Request $request)
+    {
+        $request->validate(['file' => 'required|file|mimes:csv,txt']);
+        $rows = array_map('str_getcsv', file($request->file('file')->getRealPath()));
+        $header = array_shift($rows);
+        foreach ($rows as $row) {
+            $data = array_combine($header, $row);
+            Produk::create([
+                'id_kategori' => Kategori::where('nama', $data['Kategori'] ?? '')->value('id_kategori') ?: 1,
+                'nama' => $data['Nama'] ?? null,
+                'harga' => $data['Harga'] ?? 0,
+                'biaya_produk' => $data['Biaya Produk'] ?? 0,
+                'stok' => $data['Stok'] ?? 0,
+                'batas_stok' => $data['Batas Stok'] ?? 0,
+                'nomor_bpom' => $data['Nomor BPOM'] ?? null,
+                'gambar' => null,
+            ]);
+        }
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil diimpor.');
+    }
 }
