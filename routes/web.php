@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
     // Import/Export for Produk
     Route::get('produk/export', [ProdukController::class, 'export'])->name('produk.export');
     Route::post('produk/import', [ProdukController::class, 'import'])->name('produk.import');
-    
+
     // Manajemen Routes
     Route::resource('produk', ProdukController::class);
     Route::resource('kategori', KategoriController::class);

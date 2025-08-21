@@ -147,14 +147,14 @@ class ProdukController extends Controller
      */
     public function export()
     {
-        $fileName = 'produk_export_'.now()->format('Ymd_His').'.csv';
+        $fileName = 'produk_export_' . now()->format('Ymd_His') . '.csv';
         $headers = [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => "attachment; filename={$fileName}",
         ];
         $callback = function () {
             $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['ID Produk','Nama','Kategori','Harga','Biaya Produk','Stok','Batas Stok','Nomor BPOM']);
+            fputcsv($handle, ['ID Produk', 'Nama', 'Kategori', 'Harga', 'Biaya Produk', 'Stok', 'Batas Stok', 'Nomor BPOM']);
             Produk::with('kategori')->chunk(100, function ($produks) use ($handle) {
                 foreach ($produks as $p) {
                     fputcsv($handle, [
