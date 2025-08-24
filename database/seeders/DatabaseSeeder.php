@@ -62,8 +62,8 @@ class DatabaseSeeder extends Seeder
             'id_pengguna' => $user->id,
             'id_pelanggan' => $pelanggan->id_pelanggan,
             'tanggal' => now(),
-            'total' => $produk->harga,
-            'status' => 'menunggu',
+            'total_harga' => $produk->harga,
+            'status' => 'pending',
             'catatan' => null,
             'diskon' => 0,
             'pajak' => 0,
@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
         Pembayaran::create([
             'id_transaksi' => $transaksi->id_transaksi,
             'metode' => 'tunai',
-            'jumlah' => $transaksi->total,
+            'jumlah' => $transaksi->total_harga,
             'keterangan' => null,
             'tanggal' => now(),
         ]);

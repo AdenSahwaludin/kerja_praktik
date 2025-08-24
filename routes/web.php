@@ -5,6 +5,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -78,9 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('pengguna', PenggunaController::class);
 
     Route::prefix('laporan')->name('laporan.')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('Laporan/Index');
-        })->name('index');
+        Route::get('/', [LaporanController::class, 'index'])->name('index');
+        Route::get('/penjualan', [LaporanController::class, 'penjualan'])->name('penjualan');
+        Route::get('/stok', [LaporanController::class, 'stok'])->name('stok');
+        Route::get('/pelanggan', [LaporanController::class, 'pelanggan'])->name('pelanggan');
+        Route::get('/transaksi', [LaporanController::class, 'transaksi'])->name('transaksi');
     });
 
     // Pengaturan Sistem Routes

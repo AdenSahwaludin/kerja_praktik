@@ -28,7 +28,6 @@ return new class extends Migration {
 
             // Remove unused columns
             $table->dropColumn('email_verified_at');
-            $table->dropColumn('remember_token');
         });
     }
 
@@ -46,7 +45,6 @@ return new class extends Migration {
             $table->string('password')->change();
             $table->dropColumn(['telepon', 'role', 'terakhir_login']);
             $table->timestamp('email_verified_at')->nullable();
-            $table->rememberToken();
         });
     }
 };

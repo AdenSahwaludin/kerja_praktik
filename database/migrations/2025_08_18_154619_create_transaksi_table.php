@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_pengguna');
             $table->char('id_pelanggan', 7);
             $table->date('tanggal');
-            $table->decimal('total', 10, 2);
-            $table->enum('status', ['menunggu', 'selesai', 'dibatalkan']);
+            $table->decimal('total_harga', 10, 2);
+            $table->enum('status', ['pending', 'selesai', 'dibatalkan'])->default('pending');
             $table->text('catatan')->nullable();
             $table->decimal('diskon', 10, 2)->nullable();
             $table->decimal('pajak', 10, 2)->nullable();

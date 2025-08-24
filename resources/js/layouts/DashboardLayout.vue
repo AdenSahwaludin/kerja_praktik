@@ -234,8 +234,12 @@ const menuItems: MenuItem[] = [
     {
         label: 'Laporan',
         icon: 'bx bx-file',
-        route: 'laporan.index',
-        active: route().current('laporan.*'),
+        children: [
+            { label: 'Dashboard Laporan', route: 'laporan.index', active: route().current('laporan.index') },
+            { label: 'Laporan Penjualan', route: 'laporan.penjualan', active: route().current('laporan.penjualan') },
+            { label: 'Laporan Produk', route: 'laporan.stok', active: route().current('laporan.stok') },
+            { label: 'Laporan Pelanggan', route: 'laporan.pelanggan', active: route().current('laporan.pelanggan') },
+        ],
     },
     {
         label: 'Pengaturan Sistem',

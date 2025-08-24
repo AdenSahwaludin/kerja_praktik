@@ -21,7 +21,7 @@ class Transaksi extends Model
         'id_pengguna',
         'id_pelanggan',
         'tanggal',
-        'total',
+        'total_harga',
         'status',
         'catatan',
         'diskon',
@@ -31,10 +31,11 @@ class Transaksi extends Model
 
     protected $casts = [
         'tanggal' => 'date',
-        'total' => 'decimal:2',
+        'total_harga' => 'decimal:2',
         'diskon' => 'decimal:2',
         'pajak' => 'decimal:2',
     ];
+
     public function pengguna()
     {
         return $this->belongsTo(User::class, 'id_pengguna', 'id');
@@ -45,14 +46,14 @@ class Transaksi extends Model
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 
-    public function details()
+    public function detail()
     {
         return $this->hasMany(Detail::class, 'id_transaksi', 'id_transaksi');
     }
 
     public function pembayaran()
     {
-        return $this->hasMany(Pembayaran::class, 'id_transaksi', 'id_transaksi');
+        return $this->hasOne(Pembayaran::class, 'id_transaksi', 'id_transaksi');
     }
 
     /**

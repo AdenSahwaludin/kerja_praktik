@@ -28,7 +28,7 @@ const formatDate = (dateString: string) => {
 };
 
 const getRoleBadgeClass = (role: string) => {
-    const roleClasses = {
+    const roleClasses: Record<string, string> = {
         admin: 'bg-danger',
         manager: 'bg-warning',
         kasir: 'bg-info',
