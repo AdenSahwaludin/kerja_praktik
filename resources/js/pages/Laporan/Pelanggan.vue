@@ -25,6 +25,7 @@ interface Props {
     filters?: {
         tanggal_mulai?: string;
         tanggal_selesai?: string;
+        pelanggan?: string;
     };
 }
 
@@ -32,6 +33,7 @@ const props = defineProps<Props>();
 
 const tanggalMulai = ref(props.filters?.tanggal_mulai || '');
 const tanggalSelesai = ref(props.filters?.tanggal_selesai || '');
+const pelangganSearch = ref(props.filters?.pelanggan || '');
 
 const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -41,23 +43,18 @@ const formatCurrency = (value: number) => {
     }).format(value);
 };
 
-const generateReport = () => {
+const applyFilter = () => {
     const params: any = {};
-
-    if (tanggalMulai.value) {
-        params.tanggal_mulai = tanggalMulai.value;
-    }
-
-    if (tanggalSelesai.value) {
-        params.tanggal_selesai = tanggalSelesai.value;
-    }
-
+    if (tanggalMulai.value) params.tanggal_mulai = tanggalMulai.value;
+    if (tanggalSelesai.value) params.tanggal_selesai = tanggalSelesai.value;
+    if (pelangganSearch.value) params.pelanggan = pelangganSearch.value;
     router.get(route('laporan.pelanggan'), params);
 };
 
 const resetFilters = () => {
     tanggalMulai.value = '';
     tanggalSelesai.value = '';
+    pelangganSearch.value = '';
     router.get(route('laporan.pelanggan'));
 };
 </script>
@@ -79,25 +76,31 @@ const resetFilters = () => {
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" v-model="tanggalMulai" />
+                        <input type="date" class="form-control" id="tanggal_mulai" v-model="tanggalMulai" @change="applyFilter" />
                         <small class="text-muted">Kosongkan untuk semua data</small>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tanggal_selesai" v-model="tanggalSelesai" />
+                        <input type="date" class="form-control" id="tanggal_selesai" v-model="tanggalSelesai" @change="applyFilter" />
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-primary" @click="generateReport">
-                                <i class="bx bx-search me-1"></i>
-                                Generate
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" @click="resetFilters">
-                                <i class="bx bx-refresh me-1"></i>
-                                Reset
-                            </button>
-                        </div>
+                        <label for="pelanggan" class="form-label">Pelanggan</label>
+                        <input
+                            type="text"
+                            class="form-control mb-2"
+                            id="pelanggan"
+                            v-model="pelangganSearch"
+                            @input="applyFilter"
+                            placeholder="Cari pelanggan"
+                            list="pelangganList"
+                        />
+                        <datalist id="pelangganList">
+                            <option v-for="p in props.pelanggan" :key="p.id_pelanggan" :value="p.nama" />
+                        </datalist>
+                        <button type="button" class="btn btn-outline-secondary mt-1" @click="resetFilters">
+                            <i class="bx bx-refresh me-1"></i>
+                            Reset
+                        </button>
                     </div>
                 </div>
             </div>
